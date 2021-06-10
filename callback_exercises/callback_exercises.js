@@ -224,7 +224,65 @@ class Neuron {
 const neuron = new Neuron();
 neuron.fire = neuron.fire.myThrottle(500);
 
-const interval = setInterval(() => {
-  neuron.fire();
-}, 10);
+// const interval = setInterval(() => {
+//   neuron.fire();
+// }, 10);
 
+class SearchBar {
+  constructor() {
+    this.query = "";
+
+    this.type = this.type.bind(this);
+    this.search = this.search.bind(this);
+  }
+
+  type(letter) {
+    this.query += letter;
+    this.search();
+  }
+
+  search() {
+    console.log(`searching for ${this.query}`);
+  }
+}
+
+const searchBar = new SearchBar();
+
+const queryForHelloWorld = () => {
+  searchBar.type("h");
+  searchBar.type("e");
+  searchBar.type("l");
+  searchBar.type("l");
+  searchBar.type("o");
+  searchBar.type(" ");
+  setTimeout(() => { searchBar.type('w')}, 2900);
+  setTimeout(() => { searchBar.type('o')}, 3100);
+  setTimeout(() => { searchBar.type('r')}, 3100);
+  setTimeout(() => { searchBar.type('l')}, 3100);
+  setTimeout(() => { searchBar.type('d')}, 3100);
+  // searchBar.type("w");
+  // searchBar.type("o");
+  // searchBar.type("r");
+  // searchBar.type("l");
+  // searchBar.type("d");
+};
+
+
+Function.prototype.myDebounce = function (interval) {
+  let tooSoon = false; // set default boolean
+  let timeout;
+  return () => { //return myDebounce fxn
+    if(!tooSoon){ //if it's not tooSoon to search
+      tooSoon = true; //toggle tooSoon. (It is too soon). If they type, it is too soon.
+    } else {
+      clearTimeout(timeout);
+    }
+    timeout = setTimeout(() => { //setting timeout
+      tooSoon = false; //it is not too soon
+      this(); //invoke search method
+    }, interval) //for given interval
+  }
+}
+
+searchBar.search = searchBar.search.myDebounce(3000);
+queryForHelloWorld();
